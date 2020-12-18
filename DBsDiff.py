@@ -110,18 +110,26 @@ for i in range(0,len(dbs)):
     # 获得两个库表名的交集，只对比共有表的列
     setTables = list(set(tbns1).intersection(set(tbns2)))
     for j in range(0,len(setTables)):
-        showColumns = '''SELECT COLUMN_NAME FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = \'%s\' AND TABLE_NAME = \'%s\';''' % (DBname,setTables[j])
+        showColumns = '''SELECT COLUMN_NAME,COLUMN_COMMENT,COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = \'%s\' AND TABLE_NAME = \'%s\';''' % (DBname,setTables[j])
         #print(setTables[i])
         columns1 = search(showColumns,config1)
         colns1 = []
         for k in range(0,len(columns1)):
-            coln = columns1[k]['COLUMN_NAME']
-            colns1.append(coln)
+            coln = columns1[k]['COLUMN_NAME'] #字段名
+            colc = columns1[k]['COLUMN_COMMENT'] #字段备注
+            colt = columns1[k]['COLUMN_TYPE'] #字段类型
+            col_info = str(coln) + ' (' + str(colt) + ')'
+            #colns1.append(coln)
+            colns1.append(col_info)
         columns2 = search(showColumns,config2)
         colns2 = []
         for m in range(0,len(columns2)):
             coln = columns2[m]['COLUMN_NAME']
-            colns2.append(coln)
+            colc = columns2[m]['COLUMN_COMMENT']
+            colt = columns2[m]['COLUMN_TYPE']
+            col_info = str(coln) + ' (' + str(colt) + ')'
+            #colns2.append(coln)
+            colns2.append(col_info)
         setColns = list(set(colns1).difference(set(colns2)))
         if setColns:
             print('--------------------表：%s差异的列--------------------' % setTables[j])
@@ -130,3 +138,4 @@ for i in range(0,len(dbs)):
                 print(colAddr)
         else:
             pass
+
