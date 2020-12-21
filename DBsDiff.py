@@ -118,7 +118,7 @@ for i in range(0,len(dbs)):
             coln = columns1[k]['COLUMN_NAME'] #字段名
             colc = columns1[k]['COLUMN_COMMENT'] #字段备注
             colt = columns1[k]['COLUMN_TYPE'] #字段类型
-            col_info = str(coln) + str(colt).replace('\'',' ')
+            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
             #colns1.append(coln)
             colns1.append(col_info)
         columns2 = search(showColumns,config2)
@@ -127,7 +127,7 @@ for i in range(0,len(dbs)):
             coln = columns2[m]['COLUMN_NAME']
             colc = columns2[m]['COLUMN_COMMENT']
             colt = columns2[m]['COLUMN_TYPE']
-            col_info = str(coln) + str(colt).replace('\'',' ')
+            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
             #colns2.append(coln)
             colns2.append(col_info)
         setColns = list(set(colns1).difference(set(colns2)))
