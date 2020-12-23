@@ -118,18 +118,18 @@ for i in range(0,len(dbs)):
             coln = columns1[k]['COLUMN_NAME'] #字段名
             colc = columns1[k]['COLUMN_COMMENT'] #字段备注
             colt = columns1[k]['COLUMN_TYPE'] #字段类型
-            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
-            #colns1.append(coln)
-            colns1.append(col_info)
+            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'',' ') + str(colt)
+            #colns1.append(coln) #不比对数据类型
+            colns1.append(col_info) #比对数据类型
         columns2 = search(showColumns,config2)
         colns2 = []
         for m in range(0,len(columns2)):
             coln = columns2[m]['COLUMN_NAME']
             colc = columns2[m]['COLUMN_COMMENT']
             colt = columns2[m]['COLUMN_TYPE']
-            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
-            #colns2.append(coln)
-            colns2.append(col_info)
+            col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'',' ') + str(colt)
+            #colns2.append(coln) #不比对数据类型
+            colns2.append(col_info) #比对数据类型
         setColns = list(set(colns1).difference(set(colns2)))
         if setColns:
             print('--------------------表：%s差异的列--------------------' % setTables[j])
