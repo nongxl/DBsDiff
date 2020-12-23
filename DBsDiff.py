@@ -119,8 +119,8 @@ for i in range(0,len(dbs)):
             colc = columns1[k]['COLUMN_COMMENT'] #字段备注
             colt = columns1[k]['COLUMN_TYPE'] #字段类型
             col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
-            #colns1.append(coln)
-            colns1.append(col_info)
+            colns1.append(coln)
+            #colns1.append(col_info)
         columns2 = search(showColumns,config2)
         colns2 = []
         for m in range(0,len(columns2)):
@@ -128,8 +128,8 @@ for i in range(0,len(dbs)):
             colc = columns2[m]['COLUMN_COMMENT']
             colt = columns2[m]['COLUMN_TYPE']
             col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'','')
-            #colns2.append(coln)
-            colns2.append(col_info)
+            colns2.append(coln)
+            #colns2.append(col_info)
         setColns = list(set(colns1).difference(set(colns2)))
         if setColns:
             print('--------------------表：%s差异的列--------------------' % setTables[j])
