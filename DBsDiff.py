@@ -80,35 +80,60 @@ if dbs:
     print(dbs)
 else:
     pass
-print('=======================================================================')
+print('===============================================================================')
 dbs = list(dbs)
 for i in range(0,len(dbs)):
     DBname = dbs[i] #库名
     print('++++++++++++++++++++++++++++++当前库名:%s++++++++++++++++++++++++++++++' % DBname)
-    showTBs = '''select table_name from information_schema.tables where table_schema=\'%s\';''' % DBname
+    showTBs = '''select table_name,table_type from information_schema.tables where table_schema=\'%s\';''' % DBname
     tbs1 = search(showTBs,config1) #查询测试库的表
     tbns1 = []
+    vns1 = []
     #处理查询所有表的结果，处理成表名的列表
     for i in range(0,len(tbs1)):
         tbn = tbs1[i]['TABLE_NAME']
-        tbns1.append(tbn) #测试库的表名列表
+        t_type = tbs1[i]['TABLE_TYPE']
+        if t_type == 'BASE TABLE':
+            tbns1.append(tbn) #测试库的表名列表
+        elif t_type == 'VIEW': #区分视图
+            vns1.append(tbn)
+        else:
+            print('暂不支持的表类型'+ str(t_type))
 
     tbs2 = search(showTBs,config2)
     tbns2 = []
+    vns2 = []
     for i in range(0,len(tbs1)):
         tbn = tbs1[i]['TABLE_NAME']
-        tbns2.append(tbn) #正式库的表名列表
+        t_type = tbs1[i]['TABLE_TYPE']
+        if t_type == 'BASE TABLE':
+            tbns2.append(tbn) #测试库的表名列表
+        elif t_type == 'VIEW': #区分视图
+            vns2.append(tbn)
+        else:
+            print('暂不支持的表类型'+ str(t_type))
 
     #表名的差集
     dbsDiff = set(tbns1).difference(set(tbns2))
-    print('==============================库：%s差异的表:=========================' % DBname)
+    viewDiff = set(vns1).difference(set(vns2))
+
     if dbsDiff:
+        print('==============================库：%s差异的表:=========================' % DBname)
         print(dbsDiff)
+        print('====================================================================')
     else:
         pass
-    print('====================================================================')
+
+    if viewDiff:
+        print('==============================库：%s差异的视图:=========================' % DBname)
+        print(viewDiff)
+        print('====================================================================')
+    else:
+        pass
     # 获得两个库表名的交集，只对比共有表的列
     setTables = list(set(tbns1).intersection(set(tbns2)))
+    setViews = list(set(vns1).intersection(set(vns2)))
+    setTables = setTables + setViews #表和视图一起比较差异的列
     for j in range(0,len(setTables)):
         showColumns = '''SELECT COLUMN_NAME,COLUMN_COMMENT,COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = \'%s\' AND TABLE_NAME = \'%s\';''' % (DBname,setTables[j])
         #print(setTables[i])
@@ -119,8 +144,8 @@ for i in range(0,len(dbs)):
             colc = columns1[k]['COLUMN_COMMENT'] #字段备注
             colt = columns1[k]['COLUMN_TYPE'] #字段类型
             col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'',' ') + str(colt)
-            #colns1.append(coln) #不比对数据类型
-            colns1.append(col_info) #比对数据类型
+            colns1.append(coln) #不比对数据类型
+            #colns1.append(col_info) #比对数据类型
         columns2 = search(showColumns,config2)
         colns2 = []
         for m in range(0,len(columns2)):
@@ -128,9 +153,9 @@ for i in range(0,len(dbs)):
             colc = columns2[m]['COLUMN_COMMENT']
             colt = columns2[m]['COLUMN_TYPE']
             col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'',' ') + str(colt)
-            #colns2.append(coln) #不比对数据类型
-            colns2.append(col_info) #比对数据类型
-        setColns = list(set(colns1).difference(set(colns2)))
+            colns2.append(coln) #不比对数据类型
+            #colns2.append(col_info) #比对数据类型
+        setColns = list(set(colns1).difference(set(colns2))) #上面列属性经过编辑，此处比对可能有问题。需要确定检查。此处可直接对比列名和字段类型的差异
         if setColns:
             print('--------------------表：%s差异的列--------------------' % setTables[j])
             for m in range(0,len(setColns)):
@@ -138,4 +163,3 @@ for i in range(0,len(dbs)):
                 print(colAddr)
         else:
             pass
-
