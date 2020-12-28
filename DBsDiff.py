@@ -103,7 +103,7 @@ for i in range(0,len(dbs)):
     tbs2 = search(showTBs,config2)
     tbns2 = []
     vns2 = []
-    for i in range(0,len(tbs1)):
+    for i in range(0,len(tbs2)):
         tbn = tbs1[i]['TABLE_NAME']
         t_type = tbs1[i]['TABLE_TYPE']
         if t_type == 'BASE TABLE':
@@ -121,10 +121,7 @@ for i in range(0,len(dbs)):
         print('==============================库：%s差异的表:=========================' % DBname)
         print(dbsDiff)
         print('====================================================================')
-    else:
-        pass
-
-    if viewDiff:
+    elif viewDiff:
         print('==============================库：%s差异的视图:=========================' % DBname)
         print(viewDiff)
         print('====================================================================')
