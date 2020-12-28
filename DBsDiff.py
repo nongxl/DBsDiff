@@ -90,9 +90,9 @@ for i in range(0,len(dbs)):
     tbns1 = []
     vns1 = []
     #处理查询所有表的结果，处理成表名的列表
-    for i in range(0,len(tbs1)):
-        tbn = tbs1[i]['TABLE_NAME']
-        t_type = tbs1[i]['TABLE_TYPE']
+    for p in range(0,len(tbs1)):
+        tbn = tbs1[p]['TABLE_NAME']
+        t_type = tbs1[p]['TABLE_TYPE']
         if t_type == 'BASE TABLE':
             tbns1.append(tbn) #测试库的表名列表
         elif t_type == 'VIEW': #区分视图
@@ -103,9 +103,9 @@ for i in range(0,len(dbs)):
     tbs2 = search(showTBs,config2)
     tbns2 = []
     vns2 = []
-    for i in range(0,len(tbs2)):
-        tbn = tbs1[i]['TABLE_NAME']
-        t_type = tbs1[i]['TABLE_TYPE']
+    for q in range(0,len(tbs2)):
+        tbn = tbs1[q]['TABLE_NAME']
+        t_type = tbs1[q]['TABLE_TYPE']
         if t_type == 'BASE TABLE':
             tbns2.append(tbn) #测试库的表名列表
         elif t_type == 'VIEW': #区分视图
@@ -116,7 +116,6 @@ for i in range(0,len(dbs)):
     #表名的差集
     dbsDiff = set(tbns1).difference(set(tbns2))
     viewDiff = set(vns1).difference(set(vns2))
-
     if dbsDiff:
         print('==============================库：%s差异的表:=========================' % DBname)
         print(dbsDiff)
