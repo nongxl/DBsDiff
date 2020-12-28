@@ -98,7 +98,7 @@ for i in range(0,len(dbs)):
         elif t_type == 'VIEW': #区分视图
             vns1.append(tbn)
         else:
-            print('暂不支持的表类型'+ str(t_type))
+            print(str(tbn) + '暂不支持的表类型或未知错误'+str(t_type))
 
     tbs2 = search(showTBs,config2)
     tbns2 = []
@@ -111,7 +111,7 @@ for i in range(0,len(dbs)):
         elif t_type == 'VIEW' or t_type == 'SYSTEM VIEW': #区分视图
             vns2.append(tbn)
         else:
-            print('暂不支持的表类型'+ str(t_type))
+            print(str(tbn) + '暂不支持的表类型或未知错误'+str(t_type))
 
     #表名的差集
     dbsDiff = set(tbns1).difference(set(tbns2))
@@ -129,7 +129,9 @@ for i in range(0,len(dbs)):
     # 获得两个库表名的交集，只对比共有表的列
     setTables = list(set(tbns1).intersection(set(tbns2)))
     setViews = list(set(vns1).intersection(set(vns2)))
-    setTables = setTables + setViews #表和视图一起比较差异的列
+    #setTables = setTables + setViews #表和视图一起比较差异的列.视图会出现 is not BASE TABLE的错误。
+
+    #比对表中列的差异
     for j in range(0,len(setTables)):
         showColumns = '''SELECT COLUMN_NAME,COLUMN_COMMENT,COLUMN_TYPE FROM information_schema.COLUMNS WHERE TABLE_SCHEMA = \'%s\' AND TABLE_NAME = \'%s\';''' % (DBname,setTables[j])
         #print(setTables[i])
@@ -144,6 +146,7 @@ for i in range(0,len(dbs)):
             #colns1.append(col_info) #比对数据类型
         columns2 = search(showColumns,config2)
         colns2 = []
+        colt = []
         for m in range(0,len(columns2)):
             coln = columns2[m]['COLUMN_NAME']
             colc = columns2[m]['COLUMN_COMMENT']
@@ -151,11 +154,26 @@ for i in range(0,len(dbs)):
             col_info = str(coln) + str(colt).replace('b\'',' ').replace('\'',' ')
             colns2.append(coln) #不比对数据类型
             #colns2.append(col_info) #比对数据类型
-        setColns = list(set(colns1).difference(set(colns2))) #上面列属性经过编辑，此处比对可能有问题。
+        setColns = list(set(colns1).difference(set(colns2))) #上面列属性经过编辑，此处比对可能有问题。需要确定检查。此处可直接对比列名和字段类型的差异
         if setColns:
             print('--------------------表：%s差异的列--------------------' % setTables[j])
-            for m in range(0,len(setColns)):
-                colAddr = DBname+'.'+setTables[j]+'.'+setColns[m]
+            for n in range(0,len(setColns)):
+                colAddr = 'alter table '+DBname+'.'+setTables[j]+' add '+setColns[n]+' '+str(colt).replace('b\'','').replace('\'',' ')+';'
                 print(colAddr)
+        else:
+            pass
+    #比对视图中列的差异。
+    for j in range(0,len(setViews)):
+        viewDefinition = '''SELECT view_definition FROM information_schema.views WHERE TABLE_NAME = \'%s\';''' % setViews[j]
+        defSQL1 = search(viewDefinition,config1)
+        defSQL2 = search(viewDefinition,config2)
+        defSQL1 = str(defSQL1[0]['VIEW_DEFINITION'])
+        defSQL2 = str(defSQL2[0]['VIEW_DEFINITION'])
+
+        if defSQL1 != defSQL2:
+            print('--------------------视图：%s的差异--------------------' % setViews[j])
+            print(defSQL1)
+            print('-----------------------------------------------------')
+            print(defSQL2)
         else:
             pass
