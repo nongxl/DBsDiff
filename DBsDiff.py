@@ -104,8 +104,8 @@ for i in range(0,len(dbs)):
     tbns2 = []
     vns2 = []
     for q in range(0,len(tbs2)):
-        tbn = tbs1[q]['TABLE_NAME']
-        t_type = tbs1[q]['TABLE_TYPE']
+        tbn = tbs2[q]['TABLE_NAME']
+        t_type = tbs2[q]['TABLE_TYPE']
         if t_type == 'BASE TABLE':
             tbns2.append(tbn) #测试库的表名列表
         elif t_type == 'VIEW' or t_type == 'SYSTEM VIEW': #区分视图
