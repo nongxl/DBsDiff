@@ -164,15 +164,15 @@ for i in range(0,len(dbs)):
             pass
     #比对视图中列的差异。
     print('--------------------有差异的视图：--------------------')
-    for j in range(0,len(setViews)):
-        viewDefinition = '''SELECT view_definition FROM information_schema.views WHERE TABLE_NAME = \'%s\';''' % setViews[j]
+    for n in range(0,len(setViews)):
+        viewDefinition = '''SELECT view_definition FROM information_schema.views WHERE TABLE_NAME = \'%s\';''' % setViews[n]
         defSQL1 = search(viewDefinition,config1)
         defSQL2 = search(viewDefinition,config2)
         defSQL1 = str(defSQL1[0]['VIEW_DEFINITION'])
         defSQL2 = str(defSQL2[0]['VIEW_DEFINITION'])
         if defSQL1 != defSQL2:
             #print(defSQL1)
-            print(DBname+'.'+setTables[j]+'.'+setViews[j]) #只输出视图名。输出视图设计语句太乱
+            print(DBname+'.'+setViews[n]) #只输出视图名。输出视图设计语句太乱
             #print(defSQL2)
         else:
             pass
