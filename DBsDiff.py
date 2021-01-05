@@ -95,7 +95,7 @@ for i in range(0,len(dbs)):
         t_type = tbs1[p]['TABLE_TYPE']
         if t_type == 'BASE TABLE':
             tbns1.append(tbn) #测试库的表名列表
-        elif t_type == 'VIEW': #区分视图
+        elif t_type == 'VIEW' or t_type == 'SYSTEM VIEW':  # 区分视图
             vns1.append(tbn)
         else:
             print(str(tbn) + '暂不支持的表类型或未知错误'+str(t_type))
