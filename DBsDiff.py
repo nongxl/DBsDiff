@@ -64,6 +64,22 @@ for i in range(0,len(db2)):
     dbn = db2[i]['Database']
     db2List.append(dbn)
 
+'''
+#排除系统表
+try :
+    db1List.remove('information_schema')
+    db2List.remove('information_schema')
+    db1List.remove('sys')
+    db2List.remove('sys')
+    db1List.remove('performance_schema')
+    db2List.remove('performance_schema')
+    db1List.remove('recover_databases')
+    db2List.remove('recover_databases')
+    db1List.remove('mysql')
+    db2List.remove('mysql')
+except Exception as e:
+    print(e)
+'''
 #获得两个库的差集
 dbsDiff = set(db1List).difference(set(db2List))
 print('===============================数据库比对=======================================')
